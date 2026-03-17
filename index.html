@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corporate Training Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --card: #1e2026;
+    --border: #2a2d35;
+    --accent: #c8a96e;
+    --accent-dim: #a8893e;
+    --text: #f0ede8;
+    --text-muted: #8a8d96;
+    --success: #4caf82;
+    --warning: #e8a44a;
+    --danger: #e05c5c;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  .logo span { color: var(--text); }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 0.85rem; color: var(--bg);
+  }
+
+  .user-name { font-size: 0.9rem; color: var(--text-muted); }
+
+  .layout {
+    display: flex;
+    flex: 1;
+  }
+
+  aside {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 68px;
+    height: calc(100vh - 68px);
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-section {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-item:hover { background: var(--card); color: var(--text); }
+  .sidebar-item.active { background: rgba(200, 169, 110, 0.12); color: var(--accent); }
+
+  .sidebar-icon { font-size: 1rem; width: 20px; text-align: center; }
+
+  main {
+    flex: 1;
+    padding: 36px 40px;
+    max-width: 1100px;
+  }
+
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .stat-card.gold::before { background: var(--accent); }
+  .stat-card.green::before { background: var(--success); }
+  .stat-card.blue::before { background: #5b8dee; }
+  .stat-card.orange::before { background: var(--warning); }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label { font-size: 0.82rem; color: var(--text-muted); }
+
+  .progress-bar {
+    background: var(--border);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+    transition: width 0.6s ease;
+  }
+
+  .progress-fill.green { background: linear-gradient(90deg, var(--success), #3a9e6a); }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .module-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .module-icon { font-size: 1.8rem; }
+
+  .module-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-done { background: rgba(76, 175, 130, 0.15); color: var(--success); }
+  .badge-progress { background: rgba(200, 169, 110, 0.15); color: var(--accent); }
+  .badge-locked { background: rgba(138, 141, 150, 0.15); color: var(--text-muted); }
+  .badge-new { background: rgba(91, 141, 238, 0.15); color: #5b8dee; }
+
+  .module-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+  .module-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px; }
+
+  .module-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .quiz-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    max-width: 700px;
+  }
+
+  .quiz-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .options-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .option {
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .option:hover { border-color: var(--accent); background: rgba(200,169,110,0.06); }
+  .option.selected { border-color: var(--accent); background: rgba(200,169,110,0.12); color: var(--accent); }
+  .option.correct { border-color: var(--success); background: rgba(76,175,130,0.12); color: var(--success); }
+  .option.wrong { border-color: var(--danger); background: rgba(224,92,92,0.1); color: var(--danger); }
+
+  .option-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .quiz-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+  }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { background: #d4b87a; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { border-color: var(--text-muted); color: var(--text); }
+
+  .cert-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    max-width: 640px;
+    position: relative;
+  }
+
+  .cert-border {
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 32px;
+  }
+
+  .cert-seal { font-size: 3.5rem; margin-bottom: 16px; }
+
+  .cert-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  .cert-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+  }
+
+  .cert-course { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4px; }
+  .cert-date { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 24px; }
+
+  .cert-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .leaderboard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .leaderboard-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+    transition: background 0.15s;
+  }
+
+  .leaderboard-row:last-child { border-bottom: none; }
+  .leaderboard-row:hover { background: rgba(255,255,255,0.02); }
+  .leaderboard-row.you { background: rgba(200,169,110,0.06); }
+
+  .rank { width: 28px; font-family: 'DM Serif Display', serif; font-size: 1.1rem; text-align: center; color: var(--text-muted); }
+  .rank.top { color: var(--accent); }
+
+  .lb-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: 600; flex-shrink: 0;
+  }
+
+  .lb-name { flex: 1; font-size: 0.9rem; }
+  .lb-tag { font-size: 0.72rem; color: var(--accent); margin-left: 6px; }
+  .lb-score { font-weight: 600; font-size: 0.9rem; }
+  .lb-modules { font-size: 0.78rem; color: var(--text-muted); min-width: 80px; text-align: right; }
+
+  .result-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    max-width: 480px;
+  }
+
+  .result-emoji { font-size: 3.5rem; margin-bottom: 16px; }
+
+  .result-score {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Apex<span>Learn</span></div>
+  <div class="user-info">
+    <div class="user-name">Welcome, Alex</div>
+    <div class="avatar">AL</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigation</div>
+      <div class="sidebar-item active" onclick="navigate('dashboard', this)">
+        <span class="sidebar-icon">🏠</span> Dashboard
+      </div>
+      <div class="sidebar-item" onclick="navigate('modules', this)">
+        <span class="sidebar-icon">📚</span> Modules
+      </div>
+      <div class="sidebar-item" onclick="navigate('quiz', this)">
+        <span class="sidebar-icon">✏️</span> Assessment
+      </div>
+      <div class="sidebar-item" onclick="navigate('leaderboard', this)">
+        <span class="sidebar-icon">🏆</span> Leaderboard
+      </div>
+      <div class="sidebar-item" onclick="navigate('certificate', this)">
+        <span class="sidebar-icon">🎓</span> Certificate
+      </div>
+    </div>
+    <div style="padding: 0 20px;">
+      <div class="sidebar-label">Overall Progress</div>
+      <div style="font-size:0.85rem; margin-bottom:6px;">3 of 6 complete</div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:50%"></div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page active">
+      <h1>Good morning, Alex 👋</h1>
+      <p class="subtitle">Continue your Corporate Compliance training. You're halfway there.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-number">50%</div>
+          <div class="stat-label">Overall completion</div>
+          <div class="progress-bar" style="margin-top:14px;">
+            <div class="progress-fill" style="width:50%"></div>
+          </div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Modules completed</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-number">87%</div>
+          <div class="stat-label">Average quiz score</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-number">4.2h</div>
+          <div class="stat-label">Time invested</div>
+        </div>
+      </div>
+
+      <h2>Continue Learning</h2>
+      <div class="modules-grid">
+        <div class="module-card" onclick="navigate('modules', document.querySelector('[onclick*=modules]'))">
+          <div class="module-header">
+            <div class="module-icon">🔐</div>
+            <span class="module-badge badge-progress">In Progress</span>
+          </div>
+          <div class="module-title">Data Privacy & GDPR</div>
+          <div class="module-desc">Understand employee responsibilities in handling personal data and staying compliant with global regulations.</div>
+          <div class="progress-bar" style="margin-bottom:12px;">
+            <div class="progress-fill" style="width:60%"></div>
+          </div>
+          <div class="module-meta">
+            <span>⏱ 45 min</span><span>📋 5 lessons</span><span>60% done</span>
+          </div>
+        </div>
+        <div class="module-card">
+          <div class="module-header">
+            <div class="module-icon">🧑‍⚖️</div>
+            <span class="module-badge badge-new">New</span>
+          </div>
+          <div class="module-title">Workplace Ethics</div>
+          <div class="module-desc">Navigate complex workplace scenarios with a clear ethical framework rooted in company values.</div>
+          <div class="progress-bar" style="margin-bottom:12px;">
+            <div class="progress-fill" style="width:0%"></div>
+          </div>
+          <div class="module-meta">
+            <span>⏱ 30 min</span><span>📋 4 lessons</span><span>Not started</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div id="modules" class="page">
+      <h1>Training Modules</h1>
+      <p class="subtitle">Complete all 6 modules to earn your compliance certificate.</p>
+
+      <div class="modules-grid">
+        <div class="module-card">
+          <div class="module-header"><div class="module-icon">🏢</div><span class="module-badge badge-done">✓ Complete</span></div>
+          <div class="module-title">Company Orientation</div>
+          <div class="module-desc">Introduction to company values, mission, culture, and team structure for new employees.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill green" style="width:100%"></div></div>
+          <div class="module-meta"><span>⏱ 20 min</span><span>📋 3 lessons</span><span>Score: 92%</span></div>
+        </div>
+        <div class="module-card">
+          <div class="module-header"><div class="module-icon">🛡️</div><span class="module-badge badge-done">✓ Complete</span></div>
+          <div class="module-title">Information Security</div>
+          <div class="module-desc">Policies and practices to protect company assets, passwords, devices, and confidential information.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill green" style="width:100%"></div></div>
+          <div class="module-meta"><span>⏱ 40 min</span><span>📋 6 lessons</span><span>Score: 88%</span></div>
+        </div>
+        <div class="module-card">
+          <div class="module-header"><div class="module-icon">⚠️</div><span class="module-badge badge-done">✓ Complete</span></div>
+          <div class="module-title">Health & Safety</div>
+          <div class="module-desc">Workplace safety procedures, emergency protocols, and employee wellbeing responsibilities.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill green" style="width:100%"></div></div>
+          <div class="module-meta"><span>⏱ 35 min</span><span>📋 5 lessons</span><span>Score: 81%</span></div>
+        </div>
+        <div class="module-card">
+          <div class="module-header"><div class="module-icon">🔐</div><span class="module-badge badge-progress">In Progress</span></div>
+          <div class="module-title">Data Privacy & GDPR</div>
+          <div class="module-desc">Understand employee responsibilities in handling personal data and staying compliant with global regulations.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill" style="width:60%"></div></div>
+          <div class="module-meta"><span>⏱ 45 min</span><span>📋 5 lessons</span><span>60% done</span></div>
+        </div>
+        <div class="module-card">
+          <div class="module-header"><div class="module-icon">🧑‍⚖️</div><span class="module-badge badge-new">New</span></div>
+          <div class="module-title">Workplace Ethics</div>
+          <div class="module-desc">Navigate complex workplace scenarios with a clear ethical framework rooted in company values.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="module-meta"><span>⏱ 30 min</span><span>📋 4 lessons</span><span>Not started</span></div>
+        </div>
+        <div class="module-card" style="opacity:0.5; pointer-events:none;">
+          <div class="module-header"><div class="module-icon">🤝</div><span class="module-badge badge-locked">🔒 Locked</span></div>
+          <div class="module-title">Anti-Harassment Policy</div>
+          <div class="module-desc">Recognise, report, and prevent workplace harassment. Complete Module 5 to unlock.</div>
+          <div class="progress-bar" style="margin-bottom:12px;"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="module-meta"><span>⏱ 25 min</span><span>📋 4 lessons</span><span>Locked</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quiz" class="page">
+      <h1>Assessment</h1>
+      <p class="subtitle">Data Privacy & GDPR · 5 questions</p>
+
+      <div id="quiz-active">
+        <div class="quiz-container">
+          <div class="quiz-progress">
+            <span id="q-counter">Question 1 of 5</span>
+            <span id="q-score-display" style="color:var(--accent); font-weight:600;"></span>
+          </div>
+          <div class="progress-bar" style="margin-bottom:24px;">
+            <div class="progress-fill" id="q-progress" style="width:20%"></div>
+          </div>
+          <div id="question-text" class="question-text"></div>
+          <ul class="options-list" id="options-list"></ul>
+          <div class="quiz-actions">
+            <span id="feedback-text" style="font-size:0.85rem; color:var(--text-muted);"></span>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="quiz-result" style="display:none;">
+        <div class="result-box">
+          <div class="result-emoji" id="result-emoji">🎉</div>
+          <div class="result-score" id="result-score">80%</div>
+          <div style="font-size:1rem; margin-bottom:20px;" id="result-msg">Great job!</div>
+          <div id="result-detail" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:24px;"></div>
+          <div style="display:flex; gap:12px; justify-content:center;">
+            <button class="btn btn-ghost" onclick="restartQuiz()">Retake Quiz</button>
+            <button class="btn btn-primary" onclick="navigate('certificate', document.querySelector('[onclick*=certificate]'))">View Certificate →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="leaderboard" class="page">
+      <h1>Leaderboard</h1>
+      <p class="subtitle">Top performers in your organisation this month.</p>
+      <div style="margin-bottom:24px;">
+        <div class="section-title">Monthly Rankings</div>
+        <div class="leaderboard">
+          <div class="leaderboard-row">
+            <div class="rank top">1</div>
+            <div class="lb-avatar" style="background:rgba(200,169,110,0.2); color:var(--accent);">SJ</div>
+            <div class="lb-name">Sarah Johnson</div>
+            <div class="lb-score">98%</div>
+            <div class="lb-modules">6/6 modules</div>
+          </div>
+          <div class="leaderboard-row">
+            <div class="rank top">2</div>
+            <div class="lb-avatar" style="background:rgba(91,141,238,0.15); color:#5b8dee;">MK</div>
+            <div class="lb-name">Michael Kim</div>
+            <div class="lb-score">95%</div>
+            <div class="lb-modules">6/6 modules</div>
+          </div>
+          <div class="leaderboard-row">
+            <div class="rank top">3</div>
+            <div class="lb-avatar" style="background:rgba(76,175,130,0.15); color:var(--success);">PR</div>
+            <div class="lb-name">Priya Ramesh</div>
+            <div class="lb-score">91%</div>
+            <div class="lb-modules">5/6 modules</div>
+          </div>
+          <div class="leaderboard-row you">
+            <div class="rank" style="color:var(--accent); font-weight:600;">4</div>
+            <div class="lb-avatar" style="background:rgba(200,169,110,0.2); color:var(--accent);">AL</div>
+            <div class="lb-name">Alex Lee <span class="lb-tag">You</span></div>
+            <div class="lb-score">87%</div>
+            <div class="lb-modules">3/6 modules</div>
+          </div>
+          <div class="leaderboard-row">
+            <div class="rank">5</div>
+            <div class="lb-avatar">TC</div>
+            <div class="lb-name">Tom Chen</div>
+            <div class="lb-score">84%</div>
+            <div class="lb-modules">4/6 modules</div>
+          </div>
+          <div class="leaderboard-row">
+            <div class="rank">6</div>
+            <div class="lb-avatar">FN</div>
+            <div class="lb-name">Fatima Nasser</div>
+            <div class="lb-score">79%</div>
+            <div class="lb-modules">3/6 modules</div>
+          </div>
+          <div class="leaderboard-row">
+            <div class="rank">7</div>
+            <div class="lb-avatar">DM</div>
+            <div class="lb-name">David Martinez</div>
+            <div class="lb-score">73%</div>
+            <div class="lb-modules">3/6 modules</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE -->
+    <div id="certificate" class="page">
+      <h1>Certificate</h1>
+      <p class="subtitle">You're 3 modules away from earning your certificate.</p>
+
+      <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+        <div class="cert-wrapper">
+          <div class="cert-border" style="opacity:0.45; filter:blur(0.5px);">
+            <div class="cert-seal">🏅</div>
+            <div class="cert-title">Certificate of Completion</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:10px;">This certifies that</div>
+            <div class="cert-name">Alex Lee</div>
+            <div class="cert-course">has successfully completed</div>
+            <div style="font-weight:600; margin:6px 0;">Corporate Compliance Training 2026</div>
+            <div class="cert-date">March 17, 2026</div>
+            <div class="cert-divider"></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--text-muted);">
+              <div>
+                <div style="font-weight:600; color:var(--text); margin-bottom:2px;">J. Morrison</div>
+                <div>Head of People</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:600; color:var(--text); margin-bottom:2px;">ApexCorp Inc.</div>
+                <div>ID: CPL-2026-0417</div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; border-radius:var(--radius); background:rgba(14,15,17,0.5);">
+            <div style="text-align:center;">
+              <div style="font-size:2rem; margin-bottom:10px;">🔒</div>
+              <div style="font-size:0.9rem; font-weight:600; margin-bottom:4px;">Complete 3 more modules</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">to unlock your certificate</div>
+              <button class="btn btn-primary" style="margin-top:16px;" onclick="navigate('modules', document.querySelector('[onclick*=modules]'))">Continue Training</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1; min-width:220px;">
+          <div class="section-title">Completion checklist</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem;"><span style="color:var(--success);">✓</span> Company Orientation</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem;"><span style="color:var(--success);">✓</span> Information Security</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem;"><span style="color:var(--success);">✓</span> Health & Safety</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-muted);"><span style="color:var(--accent);">◑</span> Data Privacy & GDPR</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-muted);"><span>○</span> Workplace Ethics</div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.88rem; color:var(--text-muted);"><span>🔒</span> Anti-Harassment Policy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function navigate(pageId, clickedItem) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    if (clickedItem) clickedItem.classList.add('active');
+    if (pageId === 'quiz') initQuiz();
+  }
+
+  const questions = [
+    {
+      q: "Under GDPR, what is the maximum time a company has to report a data breach to the supervisory authority?",
+      options: ["24 hours", "48 hours", "72 hours", "7 days"],
+      answer: 2
+    },
+    {
+      q: "Which of the following is a valid lawful basis for processing personal data under GDPR?",
+      options: ["Company interest", "Legitimate interest", "Business necessity", "Employee request"],
+      answer: 1
+    },
+    {
+      q: "An employee receives a Subject Access Request (SAR) from a customer. What is the standard response deadline?",
+      options: ["7 days", "14 days", "30 days", "60 days"],
+      answer: 2
+    },
+    {
+      q: "Which data should NEVER be stored on a personal/unmanaged device without explicit company approval?",
+      options: ["Public marketing materials", "Customer personally identifiable information (PII)", "Company org chart", "Press releases"],
+      answer: 1
+    },
+    {
+      q: "What does the 'right to erasure' (right to be forgotten) allow an individual to do?",
+      options: [
+        "Delete their social media accounts",
+        "Request deletion of their data under certain conditions",
+        "Stop all company communications",
+        "Access all data held about them"
+      ],
+      answer: 1
+    }
+  ];
+
+  let currentQ = 0, score = 0, answered = false;
+
+  function initQuiz() {
+    currentQ = 0; score = 0; answered = false;
+    document.getElementById('quiz-active').style.display = 'block';
+    document.getElementById('quiz-result').style.display = 'none';
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('q-counter').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+    document.getElementById('q-progress').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+    document.getElementById('question-text').textContent = q.q;
+    document.getElementById('feedback-text').textContent = '';
+    document.getElementById('next-btn').disabled = true;
+    answered = false;
+
+    const list = document.getElementById('options-list');
+    list.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    q.options.forEach((opt, i) => {
+      const li = document.createElement('li');
+      li.className = 'option';
+      li.innerHTML = `<span class="option-letter">${letters[i]}</span> ${opt}`;
+      li.onclick = () => selectOption(i, li);
+      list.appendChild(li);
+    });
+  }
+
+  function selectOption(index, el) {
+    if (answered) return;
+    answered = true;
+    const q = questions[currentQ];
+    const options = document.querySelectorAll('.option');
+    options.forEach(o => o.onclick = null);
+
+    if (index === q.answer) {
+      el.classList.add('correct');
+      score++;
+      document.getElementById('feedback-text').textContent = '✓ Correct!';
+      document.getElementById('feedback-text').style.color = 'var(--success)';
+    } else {
+      el.classList.add('wrong');
+      options[q.answer].classList.add('correct');
+      document.getElementById('feedback-text').textContent = '✗ Incorrect. See highlighted answer.';
+      document.getElementById('feedback-text').style.color = 'var(--danger)';
+    }
+    document.getElementById('next-btn').disabled = false;
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ >= questions.length) showResult();
+    else renderQuestion();
+  }
+
+  function showResult() {
+    document.getElementById('quiz-active').style.display = 'none';
+    document.getElementById('quiz-result').style.display = 'block';
+    const pct = Math.round((score / questions.length) * 100);
+    document.getElementById('result-score').textContent = `${pct}%`;
+    document.getElementById('result-detail').textContent = `You answered ${score} out of ${questions.length} questions correctly.`;
+
+    if (pct >= 80) {
+      document.getElementById('result-emoji').textContent = '🎉';
+      document.getElementById('result-msg').textContent = 'Excellent work! You passed.';
+    } else if (pct >= 60) {
+      document.getElementById('result-emoji').textContent = '👍';
+      document.getElementById('result-msg').textContent = 'Good effort! Consider reviewing the material.';
+    } else {
+      document.getElementById('result-emoji').textContent = '📖';
+      document.getElementById('result-msg').textContent = 'Keep studying — you can retake the quiz anytime.';
+    }
+  }
+
+  function restartQuiz() { initQuiz(); }
+
+  initQuiz();
+</script>
+</body>
+</html>
