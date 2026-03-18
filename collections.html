@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA Store – Collections</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f7;
+  --white: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #888;
+  --border: #e8e4df;
+  --accent: #c0392b;
+  --accent-hover: #a93226;
+  --surface: #f3f0eb;
+  --radius: 4px;
+  --shadow: 0 2px 20px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* TOPBAR */
+.topbar {
+  background: var(--text);
+  color: #fff;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 8px;
+}
+
+/* NAVBAR */
+nav {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links li {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.nav-links li:hover { color: var(--text); }
+.nav-links li.active { color: var(--text); border-bottom: 2px solid var(--text); padding-bottom: 2px; }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-icon {
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text);
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-icon:hover { color: var(--accent); }
+
+.cart-badge {
+  position: absolute;
+  top: -6px; right: -7px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* HERO BANNER */
+.collections-hero {
+  background: var(--text);
+  color: #fff;
+  padding: 80px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.collections-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(192,57,43,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 50%, rgba(192,57,43,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.hero-title em { font-style: italic; color: #ccc; }
+
+.hero-desc {
+  font-size: 0.95rem;
+  color: #aaa;
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+
+.hero-pills {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hero-pill {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #ccc;
+  transition: all 0.2s;
+}
+
+.hero-pill:hover,
+.hero-pill.active {
+  background: #fff;
+  color: var(--text);
+  border-color: #fff;
+}
+
+/* SECTION WRAPPER */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+}
+
+.section-sub {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+.section-link {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.section-link:hover { color: var(--accent); }
+
+/* FEATURED COLLECTIONS GRID */
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 360px 280px;
+  gap: 16px;
+}
+
+.feat-card {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feat-card.tall { grid-row: span 2; }
+
+.feat-card-bg {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  position: relative;
+  transition: transform 0.4s;
+}
+
+.feat-card:hover .feat-card-bg { transform: scale(1.04); }
+
+.feat-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 55%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+}
+
+.feat-card-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 6px;
+}
+
+.feat-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.feat-card.tall .feat-card-title { font-size: 2rem; }
+
+.feat-card-count {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 14px;
+}
+
+.feat-card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: #fff;
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  width: fit-content;
+}
+
+.feat-card-btn:hover { background: var(--accent); color: #fff; }
+
+/* SEASON STRIP */
+.season-strip {
+  background: var(--accent);
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.season-track {
+  display: flex;
+  gap: 48px;
+  animation: scroll 20s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.season-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  flex-shrink: 0;
+}
+
+.season-dot { width: 5px; height: 5px; background: rgba(255,255,255,0.5); border-radius: 50%; }
+
+/* ALL COLLECTIONS GRID */
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.collection-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+}
+
+.collection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+.collection-image {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+}
+
+.collection-card:hover .collection-image { transform: scale(1.02); }
+
+.collection-tag-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+
+.tag-new    { background: var(--text); color: #fff; }
+.tag-sale   { background: var(--accent); color: #fff; }
+.tag-hot    { background: #e67e22; color: #fff; }
+.tag-ltd    { background: #8e44ad; color: #fff; }
+.tag-excl   { background: #2980b9; color: #fff; }
+
+.collection-info { padding: 18px 18px 16px; }
+
+.collection-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.collection-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.collection-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.collection-count { font-weight: 600; color: var(--text); }
+
+.collection-arrow {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.collection-card:hover .collection-arrow {
+  background: var(--text);
+  color: #fff;
+}
+
+/* TRENDING SECTION */
+.trending-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.product-card {
+  background: var(--white);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.22s;
+  position: relative;
+  animation: fadeUp 0.35s ease both;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.product-image {
+  background: var(--surface);
+  height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card:hover .product-image { background: #eae5de; }
+
+.product-badges {
+  position: absolute;
+  top: 10px; left: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  z-index: 1;
+}
+
+.badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.badge-sale { background: var(--accent); color: #fff; }
+.badge-new  { background: var(--text); color: #fff; }
+.badge-hot  { background: #e67e22; color: #fff; }
+
+.product-wishlist {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 30px; height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.product-card:hover .product-wishlist { opacity: 1; }
+.product-wishlist.wished { opacity: 1; color: var(--accent); }
+
+.product-info { padding: 13px 14px; }
+.product-category { font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.product-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 7px; line-height: 1.4; }
+.product-rating { display: flex; align-items: center; gap: 5px; margin-bottom: 9px; }
+.stars { color: #f1c40f; font-size: 0.75rem; }
+.rating-count { font-size: 0.7rem; color: var(--text-muted); }
+.product-price { display: flex; align-items: center; gap: 7px; }
+.price-current { font-size: 0.95rem; font-weight: 700; }
+.price-original { font-size: 0.8rem; color: var(--text-muted); text-decoration: line-through; }
+.price-discount { font-size: 0.7rem; color: var(--accent); font-weight: 700; }
+
+.product-add {
+  width: 100%;
+  padding: 10px;
+  background: var(--text);
+  color: #fff;
+  border: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.product-add:hover { background: var(--accent); }
+
+/* EDITORIAL CARDS */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.editorial-card {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  height: 320px;
+  transition: all 0.25s;
+}
+
+.editorial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.editorial-card.wide { grid-column: span 2; }
+
+.editorial-bg {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  position: absolute;
+  inset: 0;
+  transition: transform 0.4s;
+}
+
+.editorial-card:hover .editorial-bg { transform: scale(1.05); }
+
+.editorial-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+}
+
+.editorial-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 6px;
+}
+
+.editorial-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.editorial-card.wide .editorial-title { font-size: 1.7rem; }
+
+.editorial-cta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.editorial-card:hover .editorial-cta { color: #fff; }
+
+/* BRAND STRIP */
+.brand-strip {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 32px;
+}
+
+.brand-strip-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.brand-item {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--border);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.brand-item:hover { color: var(--text-muted); }
+
+/* NEWSLETTER */
+.newsletter {
+  background: var(--text);
+  color: #fff;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.newsletter h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.newsletter p {
+  font-size: 0.88rem;
+  color: #aaa;
+  margin-bottom: 28px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 10px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.newsletter-input {
+  flex: 1;
+  padding: 13px 18px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.newsletter-input::placeholder { color: #777; }
+.newsletter-input:focus { border-color: rgba(255,255,255,0.5); }
+
+.btn-newsletter {
+  padding: 13px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-newsletter:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: var(--text);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* FOOTER */
+footer {
+  background: var(--text);
+  color: #ccc;
+  padding: 56px 32px 24px;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footer-brand p { font-size: 0.83rem; line-height: 1.7; color: #888; max-width: 260px; margin-top: 14px; }
+.footer-col h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
+.footer-col ul { list-style: none; }
+.footer-col ul li { font-size: 0.83rem; margin-bottom: 9px; cursor: pointer; transition: color 0.15s; }
+.footer-col ul li:hover { color: #fff; }
+
+.footer-bottom {
+  border-top: 1px solid #2a2a2a;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #666;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">FREE SHIPPING ON ORDERS OVER ₹999 &nbsp;·&nbsp; USE CODE <b>NOVA10</b> FOR 10% OFF</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">NOVA<span>.</span></div>
+    <ul class="nav-links">
+      <li>Home</li>
+      <li>Shop</li>
+      <li class="active">Collections</li>
+      <li>Sale</li>
+    </ul>
+    <div class="nav-actions">
+      <div class="nav-icon">🔍</div>
+      <div class="nav-icon" style="position:relative;">
+        🛒
+        <span class="cart-badge" id="cart-badge">0</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="collections-hero">
+  <div class="hero-eyebrow">Curated for You · 2026</div>
+  <h1 class="hero-title">Our <em>Collections</em></h1>
+  <p class="hero-desc">Handpicked edits for every style, season, and occasion. Explore curated collections built around the way you live.</p>
+  <div class="hero-pills">
+    <div class="hero-pill active" onclick="setActivePill(this)">All</div>
+    <div class="hero-pill" onclick="setActivePill(this)">New In</div>
+    <div class="hero-pill" onclick="setActivePill(this)">Summer</div>
+    <div class="hero-pill" onclick="setActivePill(this)">Essentials</div>
+    <div class="hero-pill" onclick="setActivePill(this)">Limited Edition</div>
+    <div class="hero-pill" onclick="setActivePill(this)">Sale</div>
+  </div>
+</div>
+
+<!-- FEATURED COLLECTIONS -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Featured Collections</h2>
+      <p class="section-sub">Our most-loved curated edits this season</p>
+    </div>
+    <span class="section-link">View All →</span>
+  </div>
+
+  <div class="featured-grid">
+    <!-- Tall card -->
+    <div class="feat-card tall" onclick="showToast('Opening Summer Edit...')">
+      <div class="feat-card-bg" style="background:linear-gradient(145deg,#1a1a1a,#2d1a0e); height:100%;">☀️</div>
+      <div class="feat-card-overlay">
+        <div class="feat-card-tag">Featured Collection</div>
+        <div class="feat-card-title">The Summer Edit</div>
+        <div class="feat-card-count">86 products · New arrivals weekly</div>
+        <button class="feat-card-btn">Explore Now →</button>
+      </div>
+    </div>
+
+    <!-- Top right -->
+    <div class="feat-card" onclick="showToast('Opening Street Style...')">
+      <div class="feat-card-bg" style="background:linear-gradient(135deg,#0d1117,#1a2744); height:100%;">🧥</div>
+      <div class="feat-card-overlay">
+        <div class="feat-card-tag">Trending</div>
+        <div class="feat-card-title">Street Style</div>
+        <div class="feat-card-count">52 products</div>
+        <button class="feat-card-btn">Shop Now →</button>
+      </div>
+    </div>
+
+    <!-- Bottom right -->
+    <div class="feat-card" onclick="showToast('Opening Minimalist Luxury...')">
+      <div class="feat-card-bg" style="background:linear-gradient(135deg,#1a0a0a,#3d1515); height:100%;">⌚</div>
+      <div class="feat-card-overlay">
+        <div class="feat-card-tag">Premium</div>
+        <div class="feat-card-title">Minimalist Luxury</div>
+        <div class="feat-card-count">34 products · Members only</div>
+        <button class="feat-card-btn">Discover →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLLING STRIP -->
+<div class="season-strip">
+  <div class="season-track" id="season-track">
+    <span class="season-item">Summer 2026 <span class="season-dot"></span></span>
+    <span class="season-item">New Arrivals <span class="season-dot"></span></span>
+    <span class="season-item">Limited Edition <span class="season-dot"></span></span>
+    <span class="season-item">Members Exclusive <span class="season-dot"></span></span>
+    <span class="season-item">Free Shipping Over ₹999 <span class="season-dot"></span></span>
+    <span class="season-item">Summer 2026 <span class="season-dot"></span></span>
+    <span class="season-item">New Arrivals <span class="season-dot"></span></span>
+    <span class="season-item">Limited Edition <span class="season-dot"></span></span>
+    <span class="season-item">Members Exclusive <span class="season-dot"></span></span>
+    <span class="season-item">Free Shipping Over ₹999 <span class="season-dot"></span></span>
+  </div>
+</div>
+
+<!-- ALL COLLECTIONS -->
+<div class="section" style="padding-top:56px;">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">All Collections</h2>
+      <p class="section-sub">Browse every curated edit we've built for you</p>
+    </div>
+  </div>
+
+  <div class="collections-grid">
+
+    <div class="collection-card" onclick="showToast('Opening Summer Wardrobe...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#fff8ee,#ffe0b2);">
+        <span class="collection-tag-badge tag-new">New</span>
+        ☀️
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Summer Wardrobe</div>
+        <div class="collection-desc">Lightweight, breathable pieces for the season. Linens, cottons, and easy silhouettes.</div>
+        <div class="collection-meta">
+          <span class="collection-count">86 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Street Style...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+        <span class="collection-tag-badge tag-hot">Hot</span>
+        🧥
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Street Style</div>
+        <div class="collection-desc">Urban edge meets comfort. Graphic tees, oversized fits, and statement pieces.</div>
+        <div class="collection-meta">
+          <span class="collection-count">52 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Office Edit...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#e8f4f8,#cce5f0);">
+        <span class="collection-tag-badge tag-excl">Exclusive</span>
+        👔
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Office Edit</div>
+        <div class="collection-desc">Smart, polished essentials to elevate your workwear game from Monday to Friday.</div>
+        <div class="collection-meta">
+          <span class="collection-count">41 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Minimalist Luxury...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#1a0a0a,#2d1515);">
+        <span class="collection-tag-badge tag-ltd">Limited</span>
+        ⌚
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Minimalist Luxury</div>
+        <div class="collection-desc">Refined pieces for those who appreciate quiet quality. Watches, leather, and more.</div>
+        <div class="collection-meta">
+          <span class="collection-count">34 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Active & Sport...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);">
+        <span class="collection-tag-badge tag-new">New</span>
+        👟
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Active & Sport</div>
+        <div class="collection-desc">Performance-driven gear for workouts, runs, and everything in between.</div>
+        <div class="collection-meta">
+          <span class="collection-count">63 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Tech Essentials...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#0d0d1a,#1a1a2e);">
+        <span class="collection-tag-badge tag-hot">Hot</span>
+        🎧
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Tech Essentials</div>
+        <div class="collection-desc">The gadgets and gear you actually need. Smart, sleek, and built for modern life.</div>
+        <div class="collection-meta">
+          <span class="collection-count">29 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Weekend Vibes...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#fdf3e3,#fce4b0);">
+        🎒
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Weekend Vibes</div>
+        <div class="collection-desc">Relaxed, casual, and effortlessly cool. Your go-to edit for days off and getaways.</div>
+        <div class="collection-meta">
+          <span class="collection-count">77 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Sale Edit...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#3d0000,#7a0000);">
+        <span class="collection-tag-badge tag-sale">Sale</span>
+        🔥
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Sale Edit</div>
+        <div class="collection-desc">Up to 60% off on premium picks. Limited stock — grab it before it's gone.</div>
+        <div class="collection-meta">
+          <span class="collection-count">118 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="collection-card" onclick="showToast('Opening Gift Guide...')">
+      <div class="collection-image" style="background:linear-gradient(135deg,#1a001a,#2d002d);">
+        <span class="collection-tag-badge tag-ltd">Limited</span>
+        🎁
+      </div>
+      <div class="collection-info">
+        <div class="collection-name">Gift Guide</div>
+        <div class="collection-desc">Thoughtfully curated gifts for every budget, personality, and occasion.</div>
+        <div class="collection-meta">
+          <span class="collection-count">45 items</span>
+          <div class="collection-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TRENDING NOW -->
+<div style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Trending Now</h2>
+        <p class="section-sub">Most-loved picks from across all collections</p>
+      </div>
+      <span class="section-link">See All →</span>
+    </div>
+    <div class="trending-grid" id="trending-grid"></div>
+  </div>
+</div>
+
+<!-- EDITORIAL -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">Style Stories</h2>
+      <p class="section-sub">Editorial edits curated by our style team</p>
+    </div>
+  </div>
+
+  <div class="editorial-grid">
+    <div class="editorial-card wide" onclick="showToast('Opening The Linen Story...')">
+      <div class="editorial-bg" style="background:linear-gradient(135deg,#1a1a0a,#2d2d1a);">👕</div>
+      <div class="editorial-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);">
+        <div class="editorial-label">Style Story · Summer</div>
+        <div class="editorial-title">The Linen Story: Dressing for Heat Without Losing Style</div>
+        <div class="editorial-cta">Read the Story →</div>
+      </div>
+    </div>
+
+    <div class="editorial-card" onclick="showToast('Opening Minimal Carry...')">
+      <div class="editorial-bg" style="background:linear-gradient(135deg,#0a0a1a,#1a1a2e);">👜</div>
+      <div class="editorial-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);">
+        <div class="editorial-label">Accessories</div>
+        <div class="editorial-title">Minimal Carry: The Only Bags You Need</div>
+        <div class="editorial-cta">Read →</div>
+      </div>
+    </div>
+
+    <div class="editorial-card" onclick="showToast('Opening Watch Guide...')">
+      <div class="editorial-bg" style="background:linear-gradient(135deg,#1a0a00,#2d1800);">⌚</div>
+      <div class="editorial-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);">
+        <div class="editorial-label">Luxury</div>
+        <div class="editorial-title">The Modern Man's Guide to Watches Under ₹10K</div>
+        <div class="editorial-cta">Read →</div>
+      </div>
+    </div>
+
+    <div class="editorial-card" onclick="showToast('Opening Tech Picks...')">
+      <div class="editorial-bg" style="background:linear-gradient(135deg,#001a00,#002d00);">🎧</div>
+      <div class="editorial-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);">
+        <div class="editorial-label">Tech</div>
+        <div class="editorial-title">Best Wireless Earbuds for Every Budget in 2026</div>
+        <div class="editorial-cta">Read →</div>
+      </div>
+    </div>
+
+    <div class="editorial-card wide" onclick="showToast('Opening Footwear Guide...')">
+      <div class="editorial-bg" style="background:linear-gradient(135deg,#1a001a,#2d002d);">👟</div>
+      <div class="editorial-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);">
+        <div class="editorial-label">Style Story · Footwear</div>
+        <div class="editorial-title">From Sneakers to Loafers: Building a Versatile Shoe Wardrobe</div>
+        <div class="editorial-cta">Read the Story →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRAND STRIP -->
+<div class="brand-strip">
+  <div class="brand-strip-inner">
+    <div class="brand-item">NOVA Basics</div>
+    <div class="brand-item">NOVA Sport</div>
+    <div class="brand-item">NOVA Luxe</div>
+    <div class="brand-item">NOVA Tech</div>
+    <div class="brand-item">NOVA Home</div>
+    <div class="brand-item">NOVA Kids</div>
+    <div class="brand-item">NOVA Studio</div>
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <h2>Stay in the Loop</h2>
+  <p>New collections, exclusive drops, and style stories delivered to your inbox.</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Enter your email address" id="nl-input">
+    <button class="btn-newsletter" onclick="subscribeNewsletter()">Subscribe</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div style="font-family:'Playfair Display',serif; font-size:1.4rem; color:#fff; font-weight:700;">NOVA<span style="color:#c0392b;">.</span></div>
+      <p>Quality products for everyday life. Sustainable, affordable, and designed for you.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li>Summer Edit</li>
+        <li>Street Style</li>
+        <li>Office Edit</li>
+        <li>Sale</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li>FAQ</li>
+        <li>Shipping Info</li>
+        <li>Returns</li>
+        <li>Size Guide</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li>About Us</li>
+        <li>Careers</li>
+        <li>Contact</li>
+        <li>Privacy Policy</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 NOVA Store. All rights reserved.</span>
+    <span>Made with ❤️ in India</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const trendingProducts = [
+  { id:1,  name:'Classic Linen Shirt',   cat:'Clothing',    emoji:'👕', price:1299, orig:1999, rating:4.8, reviews:124, badge:'sale' },
+  { id:2,  name:'Minimalist Watch',      cat:'Accessories', emoji:'⌚', price:4999, orig:6999, rating:4.9, reviews:447, badge:'hot'  },
+  { id:3,  name:'Wireless Earbuds Pro',  cat:'Electronics', emoji:'🎧', price:3999, orig:5999, rating:4.9, reviews:312, badge:'sale' },
+  { id:4,  name:'Running Sneakers',      cat:'Footwear',    emoji:'👟', price:2199, orig:2999, rating:4.6, reviews:201, badge:'new'  },
+];
+
+let cart     = 0;
+let wishlist = [];
+
+// Render trending
+document.getElementById('trending-grid').innerHTML = trendingProducts.map((p, i) => {
+  const badge    = p.badge ? `<div class="product-badges"><span class="badge badge-${p.badge}">${p.badge.toUpperCase()}</span></div>` : '';
+  const origHTML = p.orig > p.price ? `<span class="price-original">₹${p.orig.toLocaleString()}</span>` : '';
+  const discHTML = p.orig > p.price ? `<span class="price-discount">-${Math.round((1-p.price/p.orig)*100)}%</span>` : '';
+  return `
+    <div class="product-card" style="animation-delay:${i*0.07}s">
+      <div class="product-image">
+        ${badge}
+        <button class="product-wishlist" id="wish-${p.id}" onclick="toggleWishlist(${p.id}, this)">♡</button>
+        ${p.emoji}
+      </div>
+      <div class="product-info">
+        <div class="product-category">${p.cat}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-rating">
+          <span class="stars">★★★★★</span>
+          <span class="rating-count">${p.rating} (${p.reviews})</span>
+        </div>
+        <div class="product-price">
+          <span class="price-current">₹${p.price.toLocaleString()}</span>
+          ${origHTML}${discHTML}
+        </div>
+      </div>
+      <button class="product-add" onclick="addToCart(${p.id})">Add to Cart</button>
+    </div>`;
+}).join('');
+
+function setActivePill(el) {
+  document.querySelectorAll('.hero-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  showToast('Filtered: ' + el.textContent);
+}
+
+function addToCart(id) {
+  const p = trendingProducts.find(x => x.id === id);
+  cart++;
+  document.getElementById('cart-badge').textContent = cart;
+  showToast('✓ ' + p.name + ' added to cart');
+}
+
+function toggleWishlist(id, btn) {
+  if (wishlist.includes(id)) {
+    wishlist = wishlist.filter(w => w !== id);
+    btn.textContent = '♡';
+    btn.classList.remove('wished');
+  } else {
+    wishlist.push(id);
+    btn.textContent = '♥';
+    btn.classList.add('wished');
+    showToast('♥ Added to wishlist');
+  }
+}
+
+function subscribeNewsletter() {
+  const val = document.getElementById('nl-input').value.trim();
+  if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+    showToast('❌ Please enter a valid email');
+    return;
+  }
+  document.getElementById('nl-input').value = '';
+  showToast('🎉 Subscribed! Welcome to NOVA.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
